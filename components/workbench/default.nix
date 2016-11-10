@@ -1,34 +1,33 @@
 { stdenv
   , buildFractalideSubnet
-  , net_http_components
-  , net_http_contracts
-  , app_todo_components
-  , app_todo_contracts
+  , debug
+  , io_print
+  , ip_delay
+  , pull
+  , push
+  # contracts
+  , generic_text
   , ...}:
 
 buildFractalideSubnet rec {
    src = ./.;
    subnet = ''
-   http(${net_http_components.http})
+   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull(${pull})
+   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull2(${pull})
+   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect push(${push})
 
-   '${net_http_contracts.address}:(address="0.0.0.0:8000")' -> listen http()
+   '${generic_text}:(text="IP over socket")' -> ip push()
+   '${generic_text}:(text="IP2 over socket")' ->
+       input d1(${ip_delay}) output ->
+       ip push()
+    '${generic_text}:(text="IP3 over socket")' ->
+      input d11(${ip_delay}) output ->
+      input d12(${ip_delay}) output ->
+      ip push()
+   pull() ip -> input print(${io_print})
 
-   // GET
-   http() GET[/todos/.+] -> input get(${app_todo_components.get}) response ->
-       response http()
-
-   // POST
-   http() POST[/todos/?] -> input post(${app_todo_components.post}) response ->
-       response http()
-
-   // DELETE
-   http() DELETE[/todos/.+] -> input delete(${app_todo_components.delete}) response ->
-        response http()
-
-   // PATCH
-   http() PATCH[/todos/.+] -> input patch(${app_todo_components.patch})
-   http() PUT[/todos/.+] -> input patch() response ->
-       response http()
+   pull2() ip -> input debug(${debug}) output -> input print2(${io_print})
+   '${generic_text}:(text="On pull2")' -> option debug()
    '';
 
    meta = with stdenv.lib; {
