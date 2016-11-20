@@ -11,7 +11,7 @@ buildFractalideComponent rec {
   src = ./.;
   contracts = [ generic_text ];
   buildInputs = [ nanomsg ];
-  depsSha256 = "0c1r9890bnshs1s79k95lx2ylqkab315hvyahwm3k88bazl2r0cz";
+  depsSha256 = "04b7cp9ad671n9lbzljjwnjpipzar6phpvmgfwn6ipnq6qf90wa0";
 
   meta = with stdenv.lib; {
     description = "Component: net http";
