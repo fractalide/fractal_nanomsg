@@ -17,7 +17,7 @@ component! {
   acc(),
   fn run(&mut self) -> Result<()> {
       if let Ok(mut ip) = self.ports.try_recv("connect") {
-          let reader: generic_text::Reader = ip.get_root()?;
+          let reader: generic_text::Reader = ip.read_contract()?;
           let mut socket = Socket::new(Protocol::Pull)
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
           socket.connect(reader.get_text()?)
