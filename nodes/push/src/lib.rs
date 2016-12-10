@@ -19,8 +19,8 @@ impl Portal {
     }
 }
 
-component! {
-  push, contracts( generic_text )
+agent! {
+  push, edges( generic_text )
   inputs(connect: generic_text, ip: any),
   inputs_array(),
   outputs(),
@@ -29,7 +29,7 @@ component! {
   acc(), portal(Portal => Portal::new())
   fn run(&mut self) -> Result<()> {
       if let Ok(mut ip) = self.ports.try_recv("connect") {
-          let reader: generic_text::Reader = ip.read_contract()?;
+          let reader: generic_text::Reader = ip.read_schema()?;
           let mut socket = Socket::new(Protocol::Push)
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
           socket.bind(reader.get_text()?)

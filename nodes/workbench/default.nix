@@ -1,8 +1,8 @@
-{ subnet, components, contracts }:
+{ subgraph, nodes, edges }:
 
-subnet {
+subgraph {
   src = ./.;
-  flowscript = with components; with contracts; ''
+  flowscript = with nodes; with edges; ''
   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull(${pull})
   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull2(${pull})
   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect push(${push})

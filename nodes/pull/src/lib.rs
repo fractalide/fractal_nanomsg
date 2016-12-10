@@ -7,8 +7,8 @@ extern crate nanomsg;
 use std::thread;
 use nanomsg::{Socket, Protocol};
 
-component! {
-  pull, contracts( generic_text )
+agent! {
+  pull, edges( generic_text )
   inputs(connect: generic_text, packet: any),
   inputs_array(),
   outputs(ip: any),
@@ -17,7 +17,7 @@ component! {
   acc(),
   fn run(&mut self) -> Result<()> {
       if let Ok(mut ip) = self.ports.try_recv("connect") {
-          let reader: generic_text::Reader = ip.read_contract()?;
+          let reader: generic_text::Reader = ip.read_schema()?;
           let mut socket = Socket::new(Protocol::Pull)
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
           socket.connect(reader.get_text()?)
