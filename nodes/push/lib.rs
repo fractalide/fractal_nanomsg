@@ -20,15 +20,10 @@ impl Portal {
 }
 
 agent! {
-  push, edges( generic_text )
-  inputs(connect: generic_text, ip: any),
-  inputs_array(),
-  outputs(),
-  outputs_array(),
-  option(),
-  acc(), portal(Portal => Portal::new())
-  fn run(&mut self) -> Result<()> {
-      if let Ok(mut ip) = self.ports.try_recv("connect") {
+  input(connect: generic_text, ip: any),
+  portal(Portal => Portal::new()),
+  fn run(&mut self) -> Result<Signal> {
+      if let Ok(mut ip) = self.input.connect.try_recv() {
           let reader: generic_text::Reader = ip.read_schema()?;
           let mut socket = Socket::new(Protocol::Push)
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
@@ -37,7 +32,7 @@ agent! {
           self.portal.socket = Some(socket);
       }
 
-      if let Ok(ip) = self.ports.try_recv("ip") {
+      if let Ok(ip) = self.input.ip.try_recv() {
           if let Some(ref mut socket) = self.portal.socket {
               socket.write(&ip.vec[..]);
           }
