@@ -9,11 +9,11 @@ subgraph {
 
   '${generic_text}:(text="IP over socket")' -> ip push()
   '${generic_text}:(text="IP2 over socket")' ->
-     input d1(${ip_delay}) output ->
+     input d1(${msg_delay}) output ->
      ip push()
   '${generic_text}:(text="IP3 over socket")' ->
-    input d11(${ip_delay}) output ->
-    input d12(${ip_delay}) output ->
+    input d11(${msg_delay}) output ->
+    input d12(${msg_delay}) output ->
     ip push()
   pull() ip -> input print(${io_print})
 
