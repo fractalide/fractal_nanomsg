@@ -2,6 +2,7 @@
 
 subgraph {
   src = ./.;
+  edges = with edges; [ generic_text ];
   flowscript = with nodes; with edges; ''
   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull(${pull})
   '${generic_text}:(text="ipc:///tmp/pipeline.ipc")' -> connect pull2(${pull})
