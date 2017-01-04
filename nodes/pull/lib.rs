@@ -8,11 +8,11 @@ use std::thread;
 use nanomsg::{Socket, Protocol};
 
 agent! {
-  input(connect: generic_text, packet: any),
+  input(connect: prim_text, packet: any),
   output(ip: any),
   fn run(&mut self) -> Result<Signal> {
       if let Ok(mut ip) = self.input.connect.try_recv() {
-          let reader: generic_text::Reader = ip.read_schema()?;
+          let reader: prim_text::Reader = ip.read_schema()?;
           let mut socket = Socket::new(Protocol::Pull)
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
           socket.connect(reader.get_text()?)
