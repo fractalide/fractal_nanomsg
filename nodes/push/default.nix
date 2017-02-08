@@ -2,7 +2,7 @@
 
 agent {
   src = ./.;
-  edges = with edges; [ prim_text ];
+  edges = with edges; [ PrimText ];
   crates = with crates; [ rustfbp capnp nanomsg ];
   osdeps = with pkgs; [ nanomsg ];
 }
