@@ -1,26 +1,27 @@
-{ subgraph, imsgs, nodes, edges }:
-
-subgraph rec {
+{ subgraph, imsg, nodes, edges }:
+let
+  PrimText1 = imsg { class = edges.PrimText; text = ''(text="ipc:///tmp/pipeline.ipc")''; };
+  PrimText2 = imsg { class = edges.PrimText; text = ''(text="IP over socket")''; };
+  PrimText3 = imsg { class = edges.PrimText; text = ''(text="IP2 over socket")''; };
+  PrimText4 = imsg { class = edges.PrimText; text = ''(text="IP3 over socket")''; };
+  PrimText5 = imsg { class = edges.PrimText; text = ''(text="On pull2")''; };
+in
+subgraph {
   src = ./.;
-  imsg = imsgs {
-    edges = with edges; [ PrimText ];
-  };
   flowscript = with nodes; ''
-  '${imsg}.PrimText:(text="ipc:///tmp/pipeline.ipc")' -> connect pull(${pull})
-  '${imsg}.PrimText:(text="ipc:///tmp/pipeline.ipc")' -> connect pull2(${pull})
-  '${imsg}.PrimText:(text="ipc:///tmp/pipeline.ipc")' -> connect push(${push})
+  '${PrimText1}' -> connect pull(${pull})
+  '${PrimText1}' -> connect pull2(${pull})
+  '${PrimText1}' -> connect push(${push})
 
-  '${imsg}.PrimText:(text="IP over socket")' -> ip push()
-  '${imsg}.PrimText:(text="IP2 over socket")' ->
-     input d1(${msg_delay}) output ->
-     ip push()
-  '${imsg}.PrimText:(text="IP3 over socket")' ->
+  '${PrimText2}' -> ip push()
+  '${PrimText3}' -> input d1(${msg_delay}) output -> ip push()
+  '${PrimText4}' ->
     input d11(${msg_delay}) output ->
     input d12(${msg_delay}) output ->
     ip push()
   pull() ip -> input print(${io_print})
 
   pull2() ip -> input debug(${debug}) output -> input print2(${io_print})
-  '${imsg}.PrimText:(text="On pull2")' -> option debug()
+  '${PrimText5}' -> option debug()
   '';
 }
