@@ -7,13 +7,13 @@ extern crate nanomsg;
 use std::thread;
 use nanomsg::{Socket, Protocol};
 
-pub struct Portal {
+pub struct State {
     socket: Option<Socket>,
 }
 
-impl Portal {
-    fn new() -> Portal {
-        Portal {
+impl State {
+    fn new() -> State {
+        State {
             socket: None,
         }
     }
@@ -21,7 +21,7 @@ impl Portal {
 
 agent! {
   input(connect: prim_text, ip: any),
-  portal(Portal => Portal::new()),
+  state(State => State::new()),
   fn run(&mut self) -> Result<Signal> {
       if let Ok(mut ip) = self.input.connect.try_recv() {
           let reader: prim_text::Reader = ip.read_schema()?;
@@ -29,11 +29,11 @@ agent! {
               .or(Err(result::Error::Misc("Cannot create socket".into())))?;
           socket.bind(reader.get_text()?)
               .or(Err(result::Error::Misc("Cannot connect socket".into())))?;
-          self.portal.socket = Some(socket);
+          self.state.socket = Some(socket);
       }
 
       if let Ok(ip) = self.input.ip.try_recv() {
-          if let Some(ref mut socket) = self.portal.socket {
+          if let Some(ref mut socket) = self.state.socket {
               socket.write(&ip.vec[..]);
           }
       }
