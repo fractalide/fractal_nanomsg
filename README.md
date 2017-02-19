@@ -27,7 +27,7 @@ Doesn't build as the nanomsg crate fails to build when using [nixcrates](github.
 ## Build Instructions
 Ensure you've installed [nix](https://nixos.org/nix).
 ```
-$ export NIX_PATH+=:fractalide=https://github.com/fractalide/fractalide/archive/v20170218.tar.gz
+$ export NIX_PATH+=:fractalide=https://github.com/fractalide/fractalide/archive/v20170220.tar.gz
 $ git clone git://github.com/fractalide/fractal_nanomsg.git
 $ cd fractal_nanomsg
 $ nix-build --argstr rs test
