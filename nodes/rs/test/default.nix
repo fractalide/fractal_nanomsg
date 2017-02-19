@@ -8,7 +8,7 @@ let
 in
 subgraph {
   src = ./.;
-  flowscript = with nodes; ''
+  flowscript = with nodes.rs; ''
   '${PrimText1}' -> connect pull(${pull})
   '${PrimText1}' -> connect pull2(${pull})
   '${PrimText1}' -> connect push(${push})
